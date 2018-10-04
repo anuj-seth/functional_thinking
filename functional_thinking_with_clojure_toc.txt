@@ -1,0 +1,35 @@
+Day 1
+    - What is functional programming?
+    - How functional programming shapes the way you attack problems.
+      - Immutability, laziness and parallelism
+    - Introduction to Clojure
+    - Clojure data types
+      - Vectors
+      - Lists
+      - Sets
+      - Maps
+    - Hash Maps - the workhorse of the Clojure world
+      - Maps as the universal design pattern
+    - Functions as first-class objects and higher order programming
+      - Passing functions to alter behaviour of other functions
+      - Partial application of functions, memoization
+    - Introduction to map/reduce and sequence functions
+      - Who needs a for loop when you can map/reduce.
+      - The sequence abstraction
+
+Day 2
+   - Recursion
+     - Recursion as the primary looping mechanism
+     - Tail call optimization or never getting a stack overflow
+     - Tower of Hanoi as recursion problem
+   - Laziness
+     - Infinite Sequences
+     - Lazy Tower of Hanoi
+   - Recursion or Lazy sequences
+     - when to use which
+   - Data Oriented Programming
+     - Blurring the lines between code and data
+   - Macros
+     - Writing code that writes code
+   - Design patterns
+     - Why functional programmers never talk about design patterns
