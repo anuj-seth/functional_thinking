@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]))
 
 (defn doubler
-  [])
+  [a]
+  (* 2 a))
 
 (deftest doubler-test
   ; make the below tests pass
