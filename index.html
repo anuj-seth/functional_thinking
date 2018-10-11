@@ -629,7 +629,7 @@
                 </section>
 
                 <section>
-                    <pre><code data-sample="code/files/functions_test.clj#5-12">
+                    <pre><code data-sample="code/files/functions_test.clj#4-12">
                     </code></pre>
                 </section>
 
@@ -740,57 +740,34 @@
 
                 <section data-markdown>
                     Functions
-                    ---------
-                    ```clj
-                    ; make the below tests pass by writing a function 
-                    ; which given a key and a map returns true iff 
-                    ; the map contains an entry with that key and it's 
-                    ; value is nil
-
-                    (true?  (__ :a {:a nil :b 2}))
-
-                    (false? (__ :b {:a nil :b 2}))
-
-                    (false? (__ :c {:a nil :b 2}))
-                    ```
-                </section>
-
-                <section data-markdown>
-                    Functions
                     Locals
                     ---------
                     ```clj
-                    ; clojure does not have local variables, it has locals that
-                    ; cannot vary.
-                    ; the 'let' form creates locals and also defines their scope.
-                    ; let consists of a vector with bindings followed by any number
-                    ; of expressions making up the body
+                    ; clojure does not have local variables, it has locals
+                    ; that cannot vary.
+                    ; the 'let' form creates locals and defines their scope.
+                    ; let consists of a vector with bindings followed by
+                    ; any number of expressions making up the body
                     (let [r 5
-                    pi 3.1415
-                    r-squared (* r r)]
-                    (println "radius is" r)
-                    (* pi r-squared))
+                          pi 3.1415
+                          r-squared (* r r)]
+                      (println "radius is" r)
+                      (* pi r-squared))
+
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; make the below tests pass
+                    ; open the file let_test.clj
+                    ; and make the test cases pass
 
-                    (= __ (let [x 5] (+ 2 x)))
-
-                    (= __ (let [x 3, y 10] (- y x)))
-
-                    (= __ (let [x 21] (let [y 3] (/ x y))))
-
-                    ; find values for x, y and z to make all
-                    ; tests evaluate to true
-                    (= 10 (let __ (+ x y)))
-
-                    (= 4 (let __ (+ y z)))
-
-                    (= 1 (let __ z))
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/let_test.clj#4-24">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
@@ -798,17 +775,17 @@
                     cond
                     ----------
                     ```clj
-                    ; cond takes a set test/expr pairs and evaluates the tests in turn
-                    ; if a test returns true then the corresponding expression is 
-                    ; evaluated and it's value returned
-
+                    ; cond takes a set of test/expr pairs and evaluates
+                    ; the tests in turn
+                    ; if a test returns true then the corresponding expression
+                    ; is evaluated and it's value returned
                     (let [grade 85]
-                    (cond
-                    (>= grade 90) "A"
-                    (>= grade 80) "B"
-                    (>= grade 70) "C"
-                    (>= grade 60) "D"
-                    :else "F"))
+                      (cond
+                        (>= grade 90) "A"
+                        (>= grade 80) "B"
+                        (>= grade 70) "C"
+                        (>= grade 60) "D"
+                        :else "F"))
                     ;=> "B"
                     ```
                 </section>
@@ -817,21 +794,28 @@
                     destructuring
                     ---------
                     ```clj
-                    ; destructuring lets you bind names to values within a collection.
+                    ; destructuring lets you bind names to values within
+                    ; a collection.
                     ; it can be used in function arguments or let bindings
                     (defn my-first
-                    [[first-thing]] ; notice that first-thing is within a vector
-                    first-thing)
+                      [[first-thing]] ; note that first-thing is inside a vector
+                      first-thing)
 
                     (my-first [:a :b :c])
                     ;=> :a
 
-                    ; notice how the extra elements of the vector are ignored.
+                    ; the extra elements of the input vector are ignored.
+                    ```
+                </section>
 
-                    ; if the destructuring form exceeds a vector, the extra elements
-                    ; are bound to nil
+                <section data-markdown>
+                    destructuring
+                    ---------
+                    ```clj
+                    ; if the destructuring form exceeds a vector,
+                    ; the extra elements are bound to nil
                     (let [[a b c d] [1 2]]
-                    (println c d))
+                      (println c d))
                     ;=> nil nil
                     ```
                 </section>
@@ -843,17 +827,16 @@
                     ; while destructuring you can name as many elements 
                     ; as you want and also use rest parameters
                     (let [[a b c & d] [1 2 3 4 5]]
-                    (println a b c) 
-                    (println d))
+                      (println a b c) 
+                      (println d))
                     ;=> 1 2 3
                     ;=> (4 5)
 
-                    ; you can also use :as to bind the whole vector
-                    ; to some symbol
+                    ; :as binds the whole vector to a symbol
                     (let [[a b c & d :as e] [1 2 3 4 5]]
-                    (println a b c) 
-                    (println d) 
-                    (println e))
+                      (println a b c) 
+                      (println d) 
+                      (println e))
                     ;=> 2 3
                     ;=> (4 5)
                     ;=> [1 2 3 4 5]
@@ -864,15 +847,14 @@
                     destructuring
                     ---------
                     ```clj
-                    ; make the below tests pass
-
-                    (= [2 4] (let [[a b c d e] [0 1 2 3 4]] __))
-
-                    (= __ (let [[a b c] [0 1]] c))
-
-                    (= [1 2 [3 4 5] [1 2 3 4 5]] 
-                    (let [[a b & c :as d] __] [a b c d]))
+                    ; open the file destructuring_test.clj
+                    ; and make the test cases pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/destructuring_test.clj#4-12">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
@@ -881,12 +863,15 @@
                     ```clj
                     ; destructuring also works with maps
                     (let [{a :a b :b} {:a 1 :b 2}] 
-                    a)
+                      a)
+
+                    ; what happens if my map does not have a key
+                    ; that is given in the destructuring ?
 
                     ; if you are naming a symbol equivalent of your map key
                     ; then you can use this shortcut
                     (let [{:keys [a b] :as in-map} {:a 1 :b 2}]
-                    [in-map b])
+                      [in-map b])
                     ;=> [{:a 1, :b 2} 2]
                     ```
                 </section>
@@ -903,16 +888,16 @@
                     ```clj
                     ; given an input x this function sums from x to 1
                     (defn sum-down-from
-                    [x]
-                    (if (zero? x)
-                    0
-                    (+ x (sum-down-from (dec x)))))
+                      [x]
+                      (if (zero? x)
+                        0
+                        (+ x (sum-down-from (dec x)))))
 
                     (sum-down-from 10)
                     ;=> 55
 
                     (sum-down-from 100000)
-                    ;=> StackOverflowError   my-project.core/sum-down-from (form-init5262236059226384564.clj:5)
+                    ;=> StackOverflowError  
 
                     ; let's try to understand why we get a stack overflow.
                     ```
@@ -924,35 +909,35 @@
 
                 <section data-markdown>
                     ```clj
-                    ; let's try to take baby steps towards a tail recursive version
+                    ; let's try to take baby steps towards a tail
+                    ; recursive version.
                     ; we introduce an accumulator to our function.
-                    ; this is a common technique to turn your function tail recursive
+                    ; this is a common technique to turn your function
+                    ; tail recursive
                     (defn sum-down-from-acc
-                    [sum x]
-                    (if (zero? x)
-                    sum
-                    (sum-down-from-acc (+ sum x) (dec x))))
+                      [sum x]
+                      (if (zero? x)
+                        sum
+                        (sum-down-from-acc (+ sum x) (dec x))))
 
                     (sum-down-from-acc 0 10)
                     ;=> 55
-
-                    (sum-down-from-acc 0 10000)
-                    ;=> StackOverflowError   my-project.core/sum-down-from-acc (form-init5262236059226384564.clj:5)
-
-                    ; there is still one step left
-
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
+                    (sum-down-from-acc 0 10000)
+                    ;=> StackOverflowError 
+                    
+                    ; there is still one step left
                     ; use the recur keyword instead of the function name
                     ; when recursing from the tail position
                     (defn sum-down-from-recur
-                    [sum x]
-                    (if (zero? x)
-                    sum
-                    (recur (+ sum x) (dec x))))
+                      [sum x]
+                      (if (zero? x)
+                        sum
+                        (recur (+ sum x) (dec x))))
 
                     (sum-down-from-recur 0 100000)
                     ```
@@ -960,19 +945,16 @@
 
                 <section data-markdown>
                     ```clj
-                    ; another way to recurse in clojure is to use the loop keyword
+                    ; the loop keyword is another way to recurse in clojure
                     ; loop allows you to recurse to a point inside the function.
                     ; let's modify our sum-down-from function to use loop
                     (defn sum-down-from-loop
-                    [initial-x]
-                    (loop [sum 0
-                    x initial-x]
-                    (if (zero? x)
-                    sum
-                    (recur (+ sum x) (dec x)))))
-
-                    (sum-down-from-loop 100000)
-                    ;=> 5000050000
+                      [initial-x]
+                      (loop [sum 0
+                             x initial-x]
+                        (if (zero? x)
+                          sum
+                          (recur (+ sum x) (dec x)))))
 
                     ; upon entering the loop form the locals sum and x are 
                     ; initialized just like in let
@@ -982,29 +964,27 @@
 
                 <section data-markdown>
                     ```clj
-                    ; make this test pass
-
-                    (= __ ((fn foo [x] 
-                    (when (> x 0) 
-                    (conj (foo (dec x)) x))) 
-                    5))
-
-                    ; hint: (conj nil 1) returns (1)
-                    ; hint hint: when returns nil if the condition is not true
+                    ; open the file recursion_test.clj
+                    ; and make the test case pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/recursion_test.clj#4-12">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
                     ```clj
                     ; let's take another test
-
-                    (= __
-                    (loop [x 5
-                    result []]
-                    (if (> x 0)
-                    (recur (dec x) (conj result (+ 2 x)))
-                    result)))
+                    ; open the file loop_test.clj
+                    ; and make the test case pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/loop_test.clj#4-12">
+                    </code></pre>
                 </section>
 
 
@@ -1051,10 +1031,20 @@
                     ```clj
                     ; this is what i came up with
                     (defn hanoi [n]
-                    (if (= 0 n)
-                    0
-                    (inc (*' 2 (hanoi (dec n))))))
+                      (if (= 0 n)
+                        0
+                        (inc (*' 2 (hanoi (dec n))))))
+                    ```
+                </section>
 
+                <section data-markdown>
+                    ```clj
+                    ; and a tail recursive version
+                    (defn hanoi-acc
+                      [acc n]
+                      (if (= n 0)
+                        acc
+                        (recur (inc (*' 2 acc)) (dec n))))
                     ```
                 </section>
 
@@ -1082,17 +1072,25 @@
                     ; hint: (doc set)
                     ```
                 </section>
+                <section data-markdown>
+                    ```clj
+                    ; this is what i came up with
+                    (defn mapset 
+                      [f s]
+                      (set (map f s)))
+                    ```
+                </section>
+
 
                 <section data-markdown>
                     ```clj
                     ; reduce reduces a collection to a single value.
                     ; it has 2 variants -
                     ; first variant takes a 2 argument function and
-                    ; applies the function to the first 2 items in the collection.
-                    ; in the next iteration the function will be called on the previous 
-                    ; return value and the next item from the sequence, 
-                    ; and so on..
-
+                    ; applies the function to the first 2 items of the collection.
+                    ; in the next iteration the function will be called on the
+                    ; previous return value and the next item from
+                    ; the sequence, and so on..
                     (reduce + [1 2 3 4])
                     ;=> 10
 
@@ -1107,16 +1105,32 @@
                     ; it applies the function to the starting value and the first 
                     ; element of the sequence.
                     ; from there on it works as above 
-
                     (reduce + 1 [2 3])
                     ;=> 6
 
                     ; let's say i want to convert a vector into a map
-                    ; with vector elements as keys and their string representation
-                    ; as values
+                    ; with vector elements as keys and their string
+                    ; representation as values.
+                    ; that is convert
+                    ; [1 2 3 4 :a]
+                    ; into
+                    ; {1 "1", 2 "2", 3 "3", 4 "4", :a ":a"}
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     (reduce (fn [acc x] (assoc acc x (str x)))
-                    {}
-                    [1 2 3 4 :a])
+                      {}
+                      [1 2 3 4 :a])
+
+                    (apply hash-map
+                      (flatten (map (fn [x] [x (str x)])
+                                 [1 2 3 4 :a])))
+
+                    (into {}
+                      (map (fn [x] [x (str x)])
+                           [1 2 3 4 :a]))
                     ```
                 </section>
 
@@ -1139,17 +1153,27 @@
 
                 <section data-markdown>
                     ```clj
-                    ; lists, vectors, sets, maps all implement the sequence abstraction
-                    ; hence all work with map
+                    ; lists, vectors, sets, maps all implement the sequence
+                    ; abstraction hence all work with map
                     (defn add-title 
-                    [s] 
-                    (str "Mr. " s))
+                      [s] 
+                      (str "Mr. " s))
 
                     (map add-title ["Ram" "Shyam"])
                     ;=> ("Mr. Ram" "Mr. Shyam")
 
                     (map add-title '("Ram" "Shyam"))
                     ;=> ("Mr. Ram" "Mr. Shyam")
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; lists, vectors, sets, maps all implement the sequence
+                    ; abstraction hence all work with map
+                    (defn add-title 
+                      [s] 
+                      (str "Mr. " s))
 
                     (map add-title #{"Ram" "Shyam"})
                     ;=> ("Mr. Ram" "Mr. Shyam")
@@ -1201,6 +1225,11 @@
                     ;=> (2 3 4)
 
                     ; so what's the difference between the two ?
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     ; next returns nil when there are no more items,
                     ; rest returns the empty list
                     (rest [1])
@@ -1218,30 +1247,37 @@
                     ; map can take multiple collections
                     ; make sure your function can handle as many arguments
                     ; as there are collections
-                    (map str ["Mr. " "Mrs. " "Miss. "] ["Abhishek" "Aishwarya" "Aaradhya"])
+                    (map str
+                    ["Mr. " "Mrs. " "Miss. "]
+                    ["Abhishek" "Aishwarya" "Aaradhya"])
                     ;=> ("Mr. Abhishek" "Mrs. Aishwarya" "Miss. Aaradhya")
 
                     ; you can even pass a collection of functions to map
-                    (map #(vector (% ()) (% []) (% {})) [seq count])
-                    ([nil nil nil] [0 0 0])
+                    (map #(vector (% ()) (% []) (% {}))
+                    [seq count])
+                    ;=>([nil nil nil] [0 0 0])
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; map a given set of input values to other values
-                    ; our input set is restricted to the strings - "a", "b", "c", "d"
-                    ; the mapping required is - "a" 1, "b" 2, "c" 3, "d" 4
+                    ; open the file map_membership_test.clj
+                    ; and make the test cases pass
 
-                    ; make the below test cases pass
-                    (= [1 2 3 4] (__ ["a" "b" "c" "d"]))
-
-                    (= [3 2] (__ ["c" "b"]))
-
-                    (= [4] (__ ["d"]))
-
-                    (= [nil] (__ ["z"]))
+                    ; remember a property of hash maps
+                    ; they can act as functions
+                    ({:a 1 "a" 2} :a)
+                    ;=> 1
+                    ({:a 1 "a" 2} "a")
+                    ;=> 2
+                    ({:a 1 "a" 2} "b")
+                    ;=> nil
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/map_membership_test.clj#4-13">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
@@ -2823,7 +2859,10 @@
 
              transition: 'slide', // none/fade/slide/convex/concave/zoom
 
-
+             math: {
+					       mathjax: 'reveal.js/plugin/math/MathJax/MathJax.js',
+					       config: 'TeX-AMS_CHTML-full'
+				     },
              // Optional reveal.js plugins
              dependencies: [
                  { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
