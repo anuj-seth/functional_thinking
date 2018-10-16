@@ -1209,8 +1209,8 @@
 	                  <h3>Sequence abstraction and core functions</h3>
 	                  <ul>
 	                      <li>We will now take a look at a number of sequence functions</li>
-	                      <li>Some old friends like map and reduce doing some surprising things</li>
-                        <li>Others which we will see for the first time like take, drop, filter, etc</li> 
+	                      <li>Some like map and reduce we explore further</li>
+                        <li>Others we will see for the first time like take, drop, filter, etc</li> 
 	                  </ul>
 	              </section>
 
@@ -1248,13 +1248,13 @@
                     ; make sure your function can handle as many arguments
                     ; as there are collections
                     (map str
-                    ["Mr. " "Mrs. " "Miss. "]
-                    ["Abhishek" "Aishwarya" "Aaradhya"])
+                      ["Mr. " "Mrs. " "Miss. "]
+                      ["Abhishek" "Aishwarya" "Aaradhya"])
                     ;=> ("Mr. Abhishek" "Mrs. Aishwarya" "Miss. Aaradhya")
 
                     ; you can even pass a collection of functions to map
                     (map #(vector (% ()) (% []) (% {}))
-                    [seq count])
+                      [seq count])
                     ;=>([nil nil nil] [0 0 0])
                     ```
                 </section>
@@ -1282,54 +1282,42 @@
 
                 <section data-markdown>
                     ```clj
-                    ; transform a sequence into sequence of pairs
-                    ; containing original element and index
-
-                    (= (__ [:a :b :c]) [[:a 0] [:b 1] [:c 2]])
-
-                    (= (__ [0 1 3]) '((0 0) (1 1) (3 2)))
-
-                    (= (__ [[:foo] {:bar :baz}]) [[[:foo] 0] [{:bar :baz} 1]])
-
+                    ; open the file map_indexed_test.clj
+                    ; and make the test cases pass
                     ; hint: (doc map-indexed)
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/map_indexed_test.clj#4-17">
+                    </code></pre>
                 </section>
 
 
                 <section data-markdown>
                     ```clj
-                    ; reduce can be used to transform a hash maps values
+                    ; reduce can be used to transform the values of a hash map
                     (reduce (fn [new-map [key val]]
-                    (assoc new-map key (inc val)))
-                    {}
-                    {:max 30 :min 10})
+                              (assoc new-map key (inc val)))
+                      {}
+                      {:max 30 :min 10})
                     ;=> {:max 31, :min 11}
 
                     ; you can even use it to filter values
                     (reduce (fn [new-map [key val]]
-                    (if (and (> val 10) (< val 30))
-                    new-map
-                    (assoc new-map key val)))
-                    {}
-                    {:max 30
-                    :min 10
-                    :intermediate 20})
+                              (if (and (> val 10) (< val 30))
+                                new-map
+                                (assoc new-map key val)))
+                      {}
+                      {:max 30 :min 10 :intermediate 20})
                     ;=> {:max 30, :min 10}
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; write a function that uses reduce to calculate factorials
-                    ; and make the below test cases pass
-
-                    (= (__ 1) 1)
-
-                    (= (__ 3) 6)
-
-                    (= (__ 5) 120)
-
-                    (= (__ 8) 40320)
+                    ; open the file reduce_factorial_test.clj
+                    ; and make the test cases pass
 
                     ; hint: range is a function to produce a sequence 
                     ;       of numbers in increasing order e.g. (range 1 10)
@@ -1337,18 +1325,30 @@
                     ```
                 </section>
 
+                <section>
+                    <pre><code data-sample="code/files/reduce_factorial_test.clj#4-17">
+                    </code></pre>
+                </section>
+
                 <section data-markdown>
                     ```clj
-                    ; take will only take the first n elements from a sequence 
-                    ; while drop will drop the first n
+                    ; take - takes only  the first n elements from a sequence 
+                    ; drop - drops the first n
                     (take 3 [1 2 3 4 5 6 7 8 9 10])
                     ;=> (1 2 3)
 
                     (drop 3 [1 2 3 4 5 6 7 8 9 10])
                     ;=> (4 5 6 7 8 9 10)
 
-                    ; take-while and drop-while are more interesting since
-                    ; they drop or take from a sequence while a predicate function
+                    ; can you guess the output of this ?
+                    (take 10 (range))
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; take-while and drop-while are more interesting.
+                    ; they drop/take from a sequence while a predicate function
                     ; is true
                     (take-while neg? [-2 -1 0 1 2 3])
                     ;=> (-2 -1)
@@ -1365,24 +1365,22 @@
 
                 <section data-markdown>
                     ```clj
-                    ; write a function which splits a sequence 
-                    ; into 2 parts at given position
-
-                    (= (__ 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]])
-
-                    (= (__ 1 [:a :b :c :d]) [[:a] [:b :c :d]])
-
-                    (= (__ 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]]) 
+                    ; open the file seq_splitter.clj
+                    ; and make the test cases pass.
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/seq_splitter_test.clj#4-17">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
                     ```clj
                     ; filter returns all items from a sequence for which
                     ; the predicate function returns true
-                    (filter (fn [x]
-                    (= (count x) 1))
-                    ["a" "aa" "b" "n" "f" "lisp" "clojure" "q" ""])
+                    (filter (fn [x] (= (count x) 1))
+                      ["a" "aa" "b" "n" "f" "lisp" "clojure" "q" ""])
                     ;=> ("a" "b" "n" "f" "q")
 
                     ; remove removes the items for which the predicate 
@@ -1391,30 +1389,27 @@
                     ;=> (1 2 3)
 
                     (remove (fn [x] (= (count x) 1))
-                    ["a" "aa" "b" "n" "f" "lisp" "clojure" "q" ""])
+                      ["a" "aa" "b" "n" "f" "lisp" "clojure" "q" ""])
                     ;=> ("aa" "lisp" "clojure" "")
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; write a function that returns only the odd 
-                    ; values from a collection
+                    ; open the file an_odd_filter_test.clj
+                    ; and make the test cases pass.
 
-                    (= (__ #{1 2 3 4 5}) '(1 3 5))
-
-                    (= (__ [4 2 1 6]) '(1))
-
-                    (= (__ [2 2 4 6]) '())
-
-                    (= (__ [1 1 1 3]) '(1 1 1 3))
-
-                    ; hint: if you think a function with a certain name may exist 
-                    ;       use the apropos function to search the docs 
-                    ;       e.g. (apropos "filter")
-                    ;       do you think there could exist a function we could use ?
-
+                    ; hint: if you think a function with a certain name
+                    ;       may exist use the apropos function to search
+                    ;       the docs e.g. (apropos "filter") and (doc filter)
+                    ;       do you think there could exist a function
+                    ;       we could use ?
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/an_odd_filter_test.clj#4-17">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
@@ -1447,16 +1442,14 @@
 
                 <section data-markdown>
                     ```clj
-                    ; sort the vector by size of items
-                    ; and make the test cases pass
-
-                    (= ["is" "today" "holiday"] (__ ["holiday" "is" "today"]))
-
-                    (= [[1 2] [1 2 3] [1 2 3 4] [1 2 3 4]] 
-                    (__ [[1 2 3 4] [1 2] [1 2 3] [1 2 3 4]]))
-
-                    (= [{:a 1} #{1 2} "abc"] (__ [#{1 2} {:a 1} "abc"]))
+                    ; open the file sort_size_test.clj
+                    ; and make the test cases pass.
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/sort_size_test.clj#4-17">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
@@ -1516,18 +1509,14 @@
 
                 <section data-markdown>
                     ```clj
-                    ; write a function to remove keys from a map which have odd values
-                    ; return value should be a map
-
-                    ; make the below test cases pass
-
-                    (= {:b 2, :d 4} (__ {:a 1 :b 2 :c 3 :d 4}))
-
-                    (= {} (__ {}))
-
-                    (= {:a 2 :b 4 :c 6} (__ {:a 2 :b 4 :c 6}))
-
+                    ; open the file odd_values_gone_test.clj
+                    ; and make the test cases pass.
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/odd_values_gone_test.clj#4-17">
+                    </code></pre>
                 </section>
 
 	              <section>
@@ -1549,21 +1538,17 @@
 
                 <section data-markdown>
                     ```clj
-                    ; write a function that uses apply to calculate factorials
-                    ; and make the below test cases pass
-
-                    (= (__ 1) 1)
-
-                    (= (__ 3) 6)
-
-                    (= (__ 5) 120)
-
-                    (= (__ 8) 40320)
+                    ; open the file apply_factorial_test.clj
+                    ; and make the test cases pass
 
                     ; hint: range is a function to produce a sequence 
                     ;       of numbers in increasing order e.g. (range 1 10)
-
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/apply_factorial_test.clj#4-17">
+                    </code></pre>
                 </section>
 
 	              <section>
@@ -1573,33 +1558,26 @@
 
                 <section data-markdown>
                     ```clj
-                    ; pack consecutive duplicates into sub lists
-
-                    (= (__ [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
-
-                    (= (__ [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)))
-
-                    (= (__ [[1 2] [1 2] [3 4]]) '(([1 2] [1 2]) ([3 4])))
-
-                    ; hint: (doc partition-by)
-                    ; hint hint: (doc identity)
+                    ; open the file consecutive_duplicates_test.clj
+                    ; and make the test cases pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/consecutive_duplicates_test.clj#4-17">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; convert the input vectors into maps keyed 
-                    ; by the type of the vector items
-
-                    (= (__ [1 :a 2 :b 3 :c]) {java.lang.Long [1 2 3], 
-                    clojure.lang.Keyword [:a :b :c]})
-
-                    (= (__ [:a "foo"  "bar" :b]) {clojure.lang.Keyword [:a :b], 
-                    java.lang.String ["foo" "bar"]})
-
-                    ; hint: (doc group-by)
-                    ; hint hint: (doc type)
+                    ; open the file mapped_by_type_test.clj
+                    ; and make the test cases pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/mapped_by_type_test.clj#4-18">
+                    </code></pre>
                 </section>
 
                 <section>
@@ -1659,24 +1637,22 @@
 
                 <section data-markdown>
                     ```clj
-                    ; since clojure functions are first class they are also data
-                    ; compare this with other languages where we have a line
-                    ; between what is data and what are things that operate on
-                    ; that data
-
+                    ; since clojure functions are first class they are also data.
                     ; you can store functions in data structure
                     [seq + - count]
 
+                    ; compare this with other languages where we have a line
+                    ; between what is data and what are things that operate on
+                    ; that data
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    ; clojure functions can also be passed as arguments to functions
+                    ; clojure functions can be passed as arguments to functions
                     ; or returned as values from functions
-                    ; this is called higher order programming and we have already 
-                    ; seen this in action with map, reduce, sort, etc 
-
+                    ; this is called higher order programming and we have already
+                    ; seen this in action with map, reduce, sort, etc
                     ```
                 </section>
 
@@ -1686,8 +1662,8 @@
                     ; and along the way we will also see a cool feature
                     ; called closure
                     (defn times-n
-                    [n]
-                    (fn [x] (* n x)))
+                      [n]
+                      (fn [x] (* n x)))
 
                     (def times-2 (times-n 2))
 
@@ -1703,18 +1679,26 @@
 
                 <section data-markdown>
                     ```clj
-                    ; write a function called divisible that takes a number n
-                    ; and returns a function that takes one input argument and returns 
-                    ; true if the input is divisible by n, false otherwise
+                    ; open the file divisible_n_test.clj
+                    ; and make the test cases pass
                     ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/divisible_n_test.clj#4-18">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    (defn divisible 
-                    [n]
-                    (fn [num] 
-                    (zero? (rem num n))))
+                    (defn divisible-by-n 
+                      [n]
+                      (fn [num] (zero? (rem num n))))
+
+                    (defn divisible-by-n 
+                      [n]
+                      (fn [num] (= 0 (mod num n))))
+
                     ```
                 </section>
 
@@ -1730,32 +1714,30 @@
                 <section data-markdown>
                     ```clj
                     (defn slow-inc
-                    [n]
-                    (Thread/sleep 1000)
-                    (inc n))
+                      [n]
+                      (Thread/sleep 1000)
+                      (inc n))
 
                     ; let's map this over a sequence of
                     ; 1000 elements.
                     ; with a sleep of a second the whole operation 
                     ; should take roughly 16 minutes
                     (time
-                    (def a (map slow-inc (range 1 1001)))
+                      (def a (map slow-inc (range 1 1001)))
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
                     ; now let's try to take the first element from this sequence
-                    (time
-                    (first a))
+                    (time (first a))
 
                     ; the output is something unexpected
                     ; let's try to explain it
 
                     ; lazy sequences only need to be realized once
                     ; below returns instantaneously
-                    (time
-                    (first a))
+                    (time (first a))
                     ```
                 </section>
 
