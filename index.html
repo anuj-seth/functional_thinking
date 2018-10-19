@@ -1026,6 +1026,17 @@
                     <p>$$T_0 = 0$$</p>
                     <p>$$T_n = 2.T_{n-1} + 1$$</p>
                 </section>
+                <section data-markdown>
+                    ```clj
+                    ; open the file recursive_hanoi_test.clj
+                    ; and make the test cases pass
+                    ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/recursive_hanoi_test.clj#4-15">
+                    </code></pre>
+                </section>
 
                 <section data-markdown>
                     ```clj
@@ -1829,11 +1840,25 @@
 
                 <section data-markdown>
                     ```clj
+                    ; open the file iterate_hanoi_test.clj
+                    ; and make the test cases pass
+                    ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/iterate_hanoi_test.clj#4-25">
+                    </code></pre>
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     ; let's take a look at the lazy version
-                    (defn lazy-hanoi
-                      []
-                      (iterate #(+ (*' 2 %) 1) 0))
-                    
+                    (defn iterate-hanoi
+                      [n]
+                      (nth (iterate #(+ (*' 2 %) 1)
+                             0)
+                        n))
+
                     ; and this is the recursive version
                     (defn hanoi [n]
                       (if (= 0 n)
@@ -1848,31 +1873,49 @@
 
                 <section data-markdown>
                     ```clj
-                    ; using lazy-seq you can create your own lazy seqs
-                    ; wrap your lazy sequence producing code in lazy-seq
+                    ; this is a recursive function for creating a seq
+                    ; of odd numbers
+
+                    (defn odd-numbers
+                      ([] (odd-numbers 1))
+                      ([n] (cons n (odd-numbers (+ n 2)))))
+
+                    (take 1000 (odd-numbers))
+                    => StackOverflowError
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; using lazy-seq you can create your own lazy seqs.
+                    ; wrap your lazy sequence producing code in lazy-seq.
                     ; use cons to create the sequence
 
-                    ; let's take a look at a simple example
                     (defn odd-numbers
-                    ([] (odd-numbers 1))
-                    ([n] (cons n (lazy-seq (odd-numbers (+ n 2))))))
+                      ([] (odd-numbers 1))
+                      ([n] (lazy-seq (cons n (odd-numbers (+ n 2))))))
 
-                    ; notice above that what looks like a recursive call is actually
-                    ; a closure over it's input and not a recursive call
+                    ; notice above that what looks like a recursive call is
+                    ; actually a closure over it's input and not a recursive
+                    ; call
+                    ```
+                </section>
 
+                <section data-markdown>
+                    ```clj
                     ; convert the below function to use lazy-seq removing
                     ; the iterate
                     (defn lazy-hanoi
-                    []
-                    (iterate #(+ (*' 2 %) 1) 0))
+                      []
+                      (iterate #(+ (*' 2 %) 1) 0))
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
                     (defn lazy-hanoi
-                    ([] (lazy-hanoi 0))
-                    ([n] (cons n (lazy-seq (lazy-hanoi (inc (*' 2 n)))))))
+                      ([] (lazy-hanoi 0))
+                      ([n] (cons n (lazy-seq (lazy-hanoi (inc (*' 2 n)))))))
                     ```
                 </section>
 
