@@ -1698,7 +1698,6 @@
                     (defn divisible-by-n 
                       [n]
                       (fn [num] (= 0 (mod num n))))
-
                     ```
                 </section>
 
@@ -1744,15 +1743,21 @@
                 <section data-markdown>
                     ```clj
                     ; laziness allows you to work with infinite sequences
-                    ; and as we will see it can provide elegant solutions 
+                    ; and as we will see it can provide elegant solutions
                     ; for some hard problems
 
                     ; range is the simplest lazy sequence function
                     ; without any arguments it produces an infinite sequence
-                    ; try this on the repl though beware you will have to kill it
+                    ; try this on the repl though beware you will have
+                    ; to kill the repl
                     (range)
+                    ``` 
+                </section>
 
-                    ; we can take as many elements as we want from a lazy sequence
+                <section data-markdown>
+                    ```clj
+                    ; we can take as many elements as we want from a lazy
+                    ; sequence
                     (take 5 (range))
 
                     ; we can also chain our lazy sequence producing functions
@@ -1762,28 +1767,25 @@
 
                 <section data-markdown>
                     ```clj
-                    ; can you write a function called my-indexed that tags each element
-                    ; of a collection with it's index
-                    ; restriction: map-indexed not allowed
+                    ; open the file my_indexed_test.clj
+                    ; and make the test cases pass
 
-                    (= '([0 1] [1 2] [2 3]) (my-indexed [1 2 3]))
-
-                    (=  '([0 [:a 1]] [1 [:b 2]]) (my-indexed {:a 1 :b 2}))
-
-                    (= () (my-indexed []))
-
-                    (= '([0 0] [1 1]) (take 2 (my-indexed (range))))
                     ``` 
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/my_indexed_test.clj#4-18">
+                    </code></pre>
                 </section>
 
                 <section data-markdown>
                     ```clj
                     ; let's look at the solution
                     (defn my-indexed 
-                    [coll] 
-                    (map (fn [elt idx] [idx elt]) 
-                    coll 
-                    (range)))
+                      [coll] 
+                      (map (fn [elt idx] [idx elt]) 
+                        coll 
+                        (range)))
                     ``` 
                 </section>
 
@@ -1794,14 +1796,20 @@
                     ; argument supplied
                     (take 5 (repeat "hello"))
 
-                    ; repeatedly is another one which calls the supplied function
-                    ; and returns infinite sequence of values returned
+                    ; repeatedly is another one which calls the supplied
+                    ; function and returns infinite sequence of values
+                    ; returned
                     (take 5 (repeatedly (fn [] (rand-int 10))))
                     ;=> (6 6 6 9 2)
+                    ``` 
+                </section>
 
+                <section data-markdown>
+                    ```clj
                     ; iterate takes a function and a starting value
                     ; and applies the function to the starting value,
                     ; then to the value returned and so on
+                    ; x, (f x), (f (f x))....
                     (take 5 (iterate inc 0))
                     ;=> (0 1 2 3 4)
                     ``` 
@@ -1823,14 +1831,14 @@
                     ```clj
                     ; let's take a look at the lazy version
                     (defn lazy-hanoi
-                    []
-                    (iterate #(+ (*' 2 %) 1) 0))
+                      []
+                      (iterate #(+ (*' 2 %) 1) 0))
                     
                     ; and this is the recursive version
                     (defn hanoi [n]
-                    (if (= 0 n)
-                    0
-                    (inc (*' 2 (hanoi (dec n))))))
+                      (if (= 0 n)
+                        0
+                        (inc (*' 2 (hanoi (dec n))))))
                     ```
                 </section>
 
