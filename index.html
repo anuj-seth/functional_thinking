@@ -1712,6 +1712,33 @@
                     ```
                 </section>
 
+                <section data-markdown>
+                    ```clj
+                    ; memoize keeps a mapping from the arguments to results
+                    ; giving you higher performance at expense of memory
+                    (defn fib [n]
+                      (condp = n
+                        0 1
+                        1 1
+                        (+ (fib (dec n)) (fib (- n 2)))))
+
+                    (time (fib 30))
+                    ;=> "Elapsed time: 73.262877 msecs"
+                    ;=> 1346269
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; we can easily memoize it
+                    (def m-fib (memoize fib))
+
+                    (time (m-fib 30))
+                    ;=> "Elapsed time: 27.334791 msecs"
+                    ;=> 1346269
+                    ```
+                </section>
+
                 <section>
                     <h3>Laziness</h3>
                     <ul>
@@ -1903,21 +1930,182 @@
 
                 <section data-markdown>
                     ```clj
-                    ; convert the below function to use lazy-seq removing
-                    ; the iterate
-                    (defn lazy-hanoi
-                      []
-                      (iterate #(+ (*' 2 %) 1) 0))
+                    ; open the file my_iterate_test.clj
+                    ; and make the test cases pass
+                    ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/my_iterate_test.clj#5-25">
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Design Patterns</h2>
+                    <h3>Or why functional programmers never talk about them</h3>
+				        </section>
+
+                <section>
+                    <p>Popularized by the Gang Of Four or GoF book</p>
+                    <p>Provide solutions to common problems faced by programmers</p>
+                    <p>Were supposed to be guidelines, but have become a religion now</p>
+				        </section>
+
+                <section>
+                    <p>Not everyone will agree with this.......</p>
+                    <p>Design patterns are not universal principles but address deficiencies of some languages</p>
+                    <p>Functional programming languages just don't need them</p>
+				        </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                     <h2>Everyone&rsquo;s favorite design pattern</h2>
+                     <p class="fragment step-fade-in-then-out">The Global Variable</p>
+                     <p class="fragment fade-in">Singleton</p>
+                    </script>
+	              </section>
+
+                <section data-markdown>
+                    ```java
+                    public final class UIConfig {
+                      public static final UIConfig INST = new UIConfig("ui.conf");
+
+                      private String backgroundStyle;
+                      private String fontStyle;
+
+                      private UIConfig(String configFile) {
+                        loadConfig(configFile);
+                      }
+
+                      private static void loadConfig(String file) {
+                        INST.backgroundStyle = "black";
+                        INST.fontStyle = "Arial";
+                      }
+
+                      public String getBackgroundStyle() {
+                        return backgroundStyle;
+                      }
+
+                      public String getFontStyle() {
+                        return fontStyle;
+                      }
+                    }
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
-                    (defn lazy-hanoi
-                      ([] (lazy-hanoi 0))
-                      ([n] (cons n (lazy-seq (lazy-hanoi (inc (*' 2 n)))))))
+                    (def ui-config (load-config "ui.config"))
+
+                    (defn load-config [config-file]
+                      ;; process config file and return map with configuratios
+                      {:bg-style "black" :font-style "Arial"})
                     ```
                 </section>
+
+                <section>
+                    <h2>Iterator Pattern</h2>
+                    <p>Wikipedia says</p>
+                    <p>In object-oriented programming, the iterator pattern is a design pattern in which an iterator is used to traverse a container and access the container&rsquo;s elements. </p>
+                    <p>The iterator pattern decouples algorithms from containers; in some cases, algorithms are necessarily container-specific and thus cannot be decoupled.</p>
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; the sequence abstraction in clojure provides this
+                    (seq [1 2 3])
+                    ;=> (1 2 3)
+
+                    (seq {:a 1, :b 2})
+                    ;=> ([:a 1] [:b 2])
+
+                    (seq #{7 8 9})
+                    ;=> (7 8 9)
+                    ```
+                </section>
+
+                <section>
+                    <h2>Strategy Pattern</h2>
+                    <p>Wikipedia says</p>
+                    <p>The strategy pattern (also known as the policy pattern) is a behavioral software design pattern that enables selecting an algorithm at runtime.</p>
+                    <p>Instead of implementing a single algorithm directly, code receives run-time instructions as to which in a family of algorithms to use.</p>
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    // we want to sort users by whether they are subscribers
+                    // and then name
+                    class SubsComparator implements Comparator<User> {
+                      @Override
+                      public int compare(User u1, User u2) {
+                        if (u1.isSubscription() == u2.isSubscription()) {
+                          return u1.getName().compareTo(u2.getName());
+                        } else if (u1.isSubscription()) {
+                           return -1;
+                        } else {
+                          return 1;
+                        }
+                      }
+                    }
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    class ReverseSubsComparator implements Comparator<User> {
+                      @Override
+                      public int compare(User u1, User u2) {
+                        if (u1.isSubscription() == u2.isSubscription()) {
+                          return u2.getName().compareTo(u1.getName());
+                        } else if (u1.isSubscription()) {
+                           return -1;
+                        } else {
+                           return 1;
+                        }
+                      }
+                    }
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    // forward sort
+                    Collections.sort(users, new SubsComparator());
+
+                    // reverse sort
+                    Collections.sort(users, new ReverseSubsComparator());
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ;; forward sort
+                    (sort-by (juxt (complement :subscription) :name) users)
+
+                    ;; reverse sort
+                    (sort-by (juxt :subscription :name) #(compare %2 %1) users)
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    (def users [{:name "ram" :subscription true}
+                                {:name "rahim" :subscription true}
+                                {:name "lakhan" :subscription false}])
+
+                    (sort-by (juxt (complement :subscription) :name) users)
+                    ;=> ({:name "rahim", :subscription true}
+                         {:name "ram", :subscription true}
+                         {:name "lakhan", :subscription false})
+
+                    (sort-by (juxt :subscription :name) #(compare %2 %1) users)
+                    ;=> ({:name "ram", :subscription true}
+                         {:name "rahim", :subscription true}
+                         {:name "lakhan", :subscription false})
+                    ```
+                </section>
+
+
 
                 <section data-markdown>
                     Side Note
@@ -1940,6 +2128,7 @@
                     (- 1))
                     ```
                 </section>
+
 
                 <section data-markdown>
                     Side Note

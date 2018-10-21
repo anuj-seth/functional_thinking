@@ -19,7 +19,7 @@
     0
     (inc (*' 2 (hanoi (dec n))))))
 
-(deftest recursive-hanoi-test
+(deftest iterate-hanoi-test
   ; make this test pass
   (is (= 0 (hanoi 0) (hanoi-acc 0 0) (iterate-hanoi 0)))
   (is (= 1 (hanoi 1) (hanoi-acc 0 1) (iterate-hanoi 1)))
