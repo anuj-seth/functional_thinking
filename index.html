@@ -1941,6 +1941,74 @@
                 </section>
 
                 <section>
+                    <h2>Data oriented programming</h2>
+				        </section>
+
+                <section>
+                    <ul>
+                        <li>OO and imperative languages enforce a seperation between data and code</li>
+                        <li>But try to reduce the friction by inventing things like ORM</li>
+                    </ul>
+				        </section>
+
+                <section>
+                    <p>Let's talk about how functional programmers look at a problem
+                        <ul>
+                            <li>Data</li>
+                            <li>Data</li>
+                        </ul>
+                    </p>
+                </section>
+
+                <section>
+                    <p>Functional programming languages promote value oriented programming</p>
+                    <ul>
+                        <li>5 is a value</li>
+                        <li>{:a 1, :b 2} is also a value</li>
+                    </ul>
+                    <p>Remember that values are immutable</p>
+	              </section>
+
+                <section>
+                    <p>Immutability of values has these benefits</p>
+                    <ul>
+                        <li>Reasonable — no need to worry about change over time.</li>
+                        <li>Equality — equal values are always equal, forever.</li>
+                        <li>Inexpensive — reference sharing is cheaper than defensive copying.</li>
+                        <li>Flatness — all subcomponents of a value are also values.</li>
+                        <li>Sharing — sharing values across threads or in a cache is stress-free.</li>
+                    </ul>
+	              </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; values can be reproduced and fabricated
+                    ; the textual form of a map is exactly what it looks like
+                    {:a 1, :b 2}
+                    ```
+                    ```java
+                    Map<String,Integer> stuff = new HashMap<String,Integer>() {{
+                       put("a", 1);
+                       put("b", 2);
+                    }};
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; values facilitate testing
+                    ; the textual form of a map is exactly what it looks like
+                    {:a 1, :b 2}
+                    ```
+                    ```java
+                    Map<String,Integer> stuff = new HashMap<String,Integer>() {{
+                    put("a", 1);
+                    put("b", 2);
+                    }};
+                    ```
+                </section>
+
+                <section>
                     <h2>Design Patterns</h2>
                     <h3>Or why functional programmers never talk about them</h3>
 				        </section>
@@ -2105,7 +2173,106 @@
                     ```
                 </section>
 
+                <section>
+                    <h2>Prototype Pattern</h2>
+                    <p>Wikipedia says</p>
+                    <p>The prototype pattern is a creational design pattern in software development. It is used when the type of objects to create is determined by a prototypical instance, which is cloned to produce new objects.</p>
+                </section>
 
+
+                <section>
+                    <h2>Prototype Pattern</h2>
+                    <p>Wikipedia says</p>
+                    <p>This pattern is used to
+                        <ul>
+                            <li>avoid subclasses of an object creator in the client application, like the factory method pattern does.</li>
+                            <li>avoid the inherent cost of creating a new object in the standard way (e.g., using the new keyword) when it is prohibitively expensive for a given application.</li>
+                        </ul>
+                    </p>
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    public class User implements Cloneable {
+                      private String name = "ZZZ";
+                      private String email = "zzz@gmail.com";
+                      private Date dateOfBirth = new Date(1970, 1, 1);
+                      private int weight = 60;
+                      private Gender gender = Gender.MALE;
+                      private Status status = Status.SINGLE;
+                      private List<Child> children = Arrays.asList(new Child(Gender.FEMALE));
+                      private double monthSalary = 1000;
+                      private List<Brand> favouriteBrands = Arrays.asList("Adidas", "GAP");
+                      // few hundreds more properties
+                      .
+                      .
+                    }
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    public class User implements Cloneable {
+                      @Override
+                      protected User clone() throws CloneNotSupportedException {
+                        User prototyped = new User();
+                        prototyped.name = name;
+                        prototyped.email = email;
+                        prototyped.dateOfBirth = (Date)dateOfBirth.clone();
+                        prototyped.weight = weight;
+                        prototyped.status = status;
+                        List<Child> childrenCopy = new ArrayList<Child>();
+                        for (Child c : children) { 
+                          childrenCopy.add(c.clone());
+                        }
+                        prototyped.children = childrenCopy;
+                        prototyped.monthSalary = monthSalary;
+                        List<String> brandsCopy = new ArrayList<String>();
+                        for (String s : favouriteBrands) {
+                          brandsCopy.add(s);
+                        }
+                        prototyped.favouriteBrands = brandsCopy;
+                        return  prototyped;
+                    }
+                    ```
+                </section>
+
+                <section>
+                    <h2>Prototype Pattern</h2>
+                    <p>Note that
+                        <ul>
+                            <li>you need to do a deep copy</li>
+                            <li>every class needs to implement clone</li>
+                        </ul>
+                    </p>
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    (def registration-prototype
+                      {:name          "ZZZ"
+                       :email         "zzz@gmail.com"
+                       :date-of-birth "1970-01-01"
+                       :weight        60
+                       :gender        :male
+                       :status        :single
+                       :children      [{:gender :female}]
+                       :month-salary  1000
+                       :brands        ["Adidas" "GAP"]})
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ;; return new object
+                    (assoc registration-prototype
+                      :name "Khushi Kumari Gupta"
+                      :email "tomato@gmail.com"
+                      :weight 52
+                      :gender :female
+                      :month-salary 1000000000)
+                    ```
+                </section>
 
                 <section data-markdown>
                     Side Note
@@ -3037,14 +3204,6 @@
                 </section>
 
                 
-                <section>
-                    <h2>The Functional Way</h2>
-                    <p>Let's talk about how functional programmers look at a problem</p>
-                    <ul>
-                        <li>Data</li>
-                        <li>Data</li>
-                    </ul>
-	              </section>
 
                 <section>
                     <h2>Resources</h2>
