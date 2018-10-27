@@ -1,7 +1,7 @@
 (ns functional-thinking.divisible-n-test
   (:require [clojure.test :refer :all]))
 
-; write a function called divisible that takes a number n
+; write a function called divisible-by-n that takes a number n
 ; and returns a function that takes one input argument
 ; and returns true if the input is divisible by n,
 ; false otherwise

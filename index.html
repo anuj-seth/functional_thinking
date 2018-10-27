@@ -1997,16 +1997,170 @@
                 <section data-markdown>
                     ```clj
                     ; values facilitate testing
-                    ; the textual form of a map is exactly what it looks like
-                    {:a 1, :b 2}
-                    ```
-                    ```java
-                    Map<String,Integer> stuff = new HashMap<String,Integer>() {{
-                    put("a", 1);
-                    put("b", 2);
-                    }};
+                    ; unit tests are very clear when we use values as input
+                    ; to pure functions
+                    ; (assert (= [1 2 3] (conj [1 2] 3)))
+
+                    ; this also extends to generative testing where you let
+                    ; the system generate input test data for you
                     ```
                 </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; values facilitate debugging
+                    ; logging values makes it much easier to see
+                    ; what is happening in a system.
+                    ; compare this to a log which shows you what
+                    ; class or function got called
+                    ```
+                </section>
+
+                <section>
+                    <h2>Macros</h2>
+                    <h3>Code that writes code</h3>
+				        </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; in programming languages like java or c
+                    ; the compiler translates your program text
+                    ; into an intermediate form called the AST but
+                    ; this AST is not accessible to you, the programmer
+
+                    ; in clojure and other lisps the textual representation
+                    ; of your code is coverted to a list data structure which
+                    ; is the AST
+                    ; hence, in clojure all your code is data
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    (eval (list + 1 2))
+                    ;=> 3
+
+                    ; note that eval works on a list data structure
+                    ; not a textual representation of it.
+
+                    (eval (concat (list + 1 2) [10]))
+                    ;=> 13
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    (eval (list 'def 'lucky-number (concat (list + 1 2) [10])))
+                    ;=> #'user/lucky-number
+                    lucky-number
+                    ;=> 13
+
+                    ; code generators in other languages generate text,
+                    ; but manipulating data is more powerful than manipulating
+                    ; text
+
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; macros are code that return lists to be evaluated
+                    ; by the clojure interpreter
+                    (defmacro infix
+                      [[left-operand operator right-operand]]
+                      (list operator left-operand right-operand))
+
+                    (infix (2 + 3))
+
+                    ; the arguments to a macro are not evaluated.
+                    ; try writing infix as a normal function
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; we can create lists in macros using list
+                    ; but there's another way.
+                    ; the syntax quote
+                    (eval (list 'def 'lucky-number (concat (list + 1 2) [10])))
+                    ;=> #'user/lucky-number
+                    lucky-number
+                    ;=> 13
+
+                    (macroexpand-1
+                      (list 'def 'lucky-number (concat (list '+ 1 2) [10])))
+                    ;=> (def lucky-number (+ 1 2 10))
+
+                    (macroexpand-1 `(def lucky-number ~(concat '(+ 1 2) [10])))
+                    ;=> (def user/lucky-number (+ 1 2 10))
+
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; if you want to see how our infix macro looks like
+                    ; syntax quote, here it is
+                    (defmacro infix
+                      [[left-operand operator right-operand]]
+                      `(~operator ~left-operand ~right-operand))
+
+                    (infix (2 + 3))
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; another macro
+                    (defmacro on-debug
+                      [& body]
+                      `(when DEBUG (do ~@body)))
+
+                    (def DEBUG false)
+
+                    (on-debug (println "hello"))
+                    ;=> nil
+
+                    (macroexpand-1 '(on-debug (println "hello")))
+                    ;=> (clojure.core/when user/DEBUG (do (println "hello")))
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; that seems vaguely cool, but why should you care ?
+                    ; macros let the programmer extend the langauge to
+                    ; fit your problem domain.
+
+                    ; even clojure defines lots of essential functionality
+                    ; as macros - and, or, when
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; this was some heavy stuff
+                    ; let's take a break by writing some code
+
+                    ; open the file remove_duplicates_test.clj
+                    ; and make the test cases pass
+                    ```
+                </section>
+
+                <section>
+                    <pre><code data-sample="code/files/remove_duplicates_test.clj#4-25">
+                    </code></pre>
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; this is my answer
+                    (defn remove-consec-duplicates
+                      [x]
+                      (map first (partition-by identity x)))
+                    ```
+                </section>
+
 
                 <section>
                     <h2>Design Patterns</h2>
@@ -2274,7 +2428,7 @@
                     ```
                 </section>
 
-                <section data-markdown>
+                <!-- <section data-markdown>
                     Side Note
                     thrush operator
                     -----
@@ -2295,9 +2449,10 @@
                     (- 1))
                     ```
                 </section>
+                -->
 
 
-                <section data-markdown>
+                <!-- <section data-markdown>
                     Side Note
                     thrush operator
                     -----
@@ -2316,8 +2471,9 @@
                     ; takes only one argument
                     ```
                 </section>
+                -->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; can you make the below test pass ?
 
@@ -2329,9 +2485,9 @@
                     __)
                     5)
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!--section data-markdown>
                     Side Note
                     thread last macro
                     -----
@@ -2351,9 +2507,9 @@
                     (take 10)
                     (reduce +))
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!--section data-markdown>
                     ```clj
                     ; can you make the below test case pass ?
                     (= (__ (map inc (take 3 (drop 2 [2 5 4 1 3 6]))))
@@ -2364,9 +2520,9 @@
                     (__))
                     11)
                     ```
-                </section>
+                </section-->
 
-                <section>
+                <!--section>
 	                  <h3>Concurrency and Parallelism</h3>
                     <ul>
                         <li>Concurrency and parallelism are two related but different things</li>
@@ -2374,10 +2530,10 @@
                         <li>Concurrency might be implemented by switching between multiple tasks running on one processor</li>
                         <li>Parallelism is a subset of concurrency and entails executing multiple tasks at the same time</li>
                     </ul>
-                </section>
+                </section-->
 
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; let's first take look at some functions that can 
                     ; parallelize your code without requiring any code changes
@@ -2396,9 +2552,9 @@
                     (sleeper 30 :2nd)
                     (keyword "3rd")))
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; let's see how much time it takes to get the first
                     ; value
@@ -2416,9 +2572,9 @@
                     ;=> "Elapsed time: 30007.241914 msecs"
                     ;=> :3rd
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; the reason for this is that clojure maintains a sliding window
                     ; within which all elements are realized and the total time taken
@@ -2427,9 +2583,9 @@
                     ; generally, the sliding window is of size N + 2, where N is 
                     ; the number of cores
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; the pmap function is the parallel version of the map function
                     ; that we have already seen.
@@ -2448,9 +2604,9 @@
                     ; pmap seems to work very well for the above example,
                     ; so should we replace all calls to map with pmap ?
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; let's do an experiment
                     ; define a range of 10 million numbers
@@ -2462,9 +2618,9 @@
                     ; what is the time taken by pmap ?
                     ; by map ?
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     (def l (range 10000000))
 
@@ -2474,9 +2630,9 @@
                     (time (def a (doall (map #(* % %) l))))
                     ;=> "Elapsed time: 7848.107447 msecs"
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; whether we should or not replace map with pmap depends
                     ; on the use case.
@@ -2489,9 +2645,9 @@
                     ; works for your use case. 
 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; finally there's the pcalls function which takes an arbitrary 
                     ; number of no argument functions and executes them in parallel
@@ -2506,28 +2662,20 @@
 
                     ; pcalls has the same benefits and trade-offs as pvalues and pmap
                     ```
-                </section>
+                </section-->
 
                 <section data-markdown>
                     ```clj
-                    ; before we move on, let's write some code.
-                    ; write a palindrome detector function which
-                    ; returns true if the sequence is a palindrome
-
-                    (false? (__ '(1 2 3 4 5)))
-
-                    (true? (__ [:foo :bar :foo]))
-
-                    (true? (__ '(1 1 3 3 1 1)))
-
-                    (false? (__ '(:a :b :c)))
-
-                    (true? (__ "racecar"))
-                    ; note that a "racecar" does not equal '(\r \a \c \e \c \a \r)
+                    ; open the file palindrome_detector_test.clj
+                    ; and make the test cases pass
                     ```
                 </section>
-
                 <section>
+                    <pre><code data-sample="code/files/palindrome_detector_test.clj#4-25">
+                    </code></pre>
+                </section>
+
+                <!-- section>
 	                  <h3>Concurrency and Parallelism</h3>
                     <p>Let's get back to our discussion of concurrency by looking at</p>
                     <ul>
@@ -2535,10 +2683,10 @@
                         <li>Delays</li>
                         <li>Promises</li>
                     </ul>
-                </section>
+                </section-->
 
 
-                <section>
+                <!-- section>
 	                  <h3>Concurrency and Parallelism</h3>
                     <p>Futures, delays and promises allow us to write concurrent code by decoupling</p>
                     <ul>
@@ -2546,19 +2694,19 @@
                         <li>Task execution</li>
                         <li>Requiring the task's result</li>
                     </ul>
-                </section>
+                </section-->
 
-                <section>
+                <!-- section>
                     <h3>Concurrency and Parallelism</h3>
                     <ul>
                         <li>Our serial code consists of task definitions like <br>(web-api/get-customer 1234)</br></li>
                         <li>As soon as clojure encouters this it executes the task and blocks until the result of the API is available</li>
                         <li>Now let's see how futures, delays and promises let us break this flow</li>
                     </ul>
-                </section>
+                </section-->
 
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; using futures you can define a task and place it on another
                     ; thread without requiring the result immediately.
@@ -2571,9 +2719,9 @@
                     ; you can fire off a future and forget about it
                     ; but most likely you are interested in it's result
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; if you noticed when we ran the future we got a funny
                     ; output on the repl immediately.
@@ -2588,9 +2736,9 @@
                     ; notice that @ is shorthand for deref and dereferencing 
                     ; the future twice executes it only once
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; you can also call realized? on a future to see if it 
                     ; is done running
@@ -2608,9 +2756,9 @@
                     ; one use case for futures could be to send stuff off to a logging
                     ; function to be executed in another thread
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!--section data-markdown>
                     ```clj
                     ; delays allow you to define a task without
                     ; having to execute it immediately or requiring the
@@ -2629,9 +2777,9 @@
                     ; and subsequently only the value of the delay is returned
                     @a-simple-delay
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; one use case for delays could be to fire off a function
                     ; to be executed when the first out of multiple futures finishes
@@ -2644,9 +2792,9 @@
                     ; times from different threads the delay body only gets executed once.
 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; promises are placeholders for values that can be delivered
                     ; by executing threads later on.
@@ -2668,9 +2816,9 @@
                     ; a value has been delivered.
                     ; calling deliver multiple times has no effect
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; let's try to see how we can use promises
 
@@ -2687,9 +2835,9 @@
 
                     ; also we can provide a time out for the deref
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; another use case for promises is as a callback
                     ; i.e. to execute some piece of code once some 
@@ -2702,33 +2850,10 @@
                     ; here the future will start running immediately but 
                     ; then block waiting for the promise
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
-                    ```clj
-                    ; this was some heavy stuff
-                    ; let's take a break by writing some code
 
-                    ; write a function to remove consecutive duplicates
-                    ; from a sequence
-
-                    (= (apply str (__ "Cllllllllojjjure")) "Clojure")
-
-                    (= (__ [1 1 2 3 3 2 2 3]) '(1 2 3 2 3))
-
-                    (= (__ [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))
-                    ```
-                </section>
-
-                <section data-markdown>
-                    ```clj
-                    ; this is my answer
-
-                    #(map first (partition-by identity %))
-                    ```
-                </section>
-
-                <section data-markdown>
+                <!-- section data-markdown>
                     Side Note
                     List comprehension
                     -------------------
@@ -2749,9 +2874,9 @@
                     ; try writing the above using map
 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     Side Note
                     List comprehension
                     -------------------
@@ -2761,9 +2886,9 @@
                     (mapcat #(map (partial * %) s2) s1)
 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     Side Note
                     List comprehension
                     -------------------
@@ -2791,9 +2916,9 @@
                     :while (even? y)]
                     y)
                     ```
-                </section>
+                </section-->
 
-                <section>
+                <!-- section>
                     <h3>Concurrency and State</h3>
                     <ul>
                         <li>Java and other imperative languages manage shared state concurrency by using locks</li>
@@ -2801,9 +2926,9 @@
                         <li>Let's talk about how Clojure manages mutating state and concurrency</li>
                         <li>But I said clojure has immutable data structures !!!</li>
                     </ul>
-                </section>
+                </section-->
 
-                <section>
+                <!-- section>
                     <h3>Concurrency and State</h3>
                     <p>We will take a look at the following clojure reference types</p>
                     <ul>
@@ -2811,9 +2936,9 @@
                         <li>Refs</li>
                         <li>Agents</li>
                     </ul>
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; atom is a reference type used to store values
                     ; and atomically update them when required.
@@ -2830,9 +2955,9 @@
                     ; note that blocking on dereference does not make sense in
                     ; case of atoms. it will always return the atom's current value
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; to update an atom to a new state we use swap!
                     (swap! counter inc)
@@ -2854,9 +2979,9 @@
                     ; previous value you can just use reset!
                     (reset! counter -1)
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; what happens if two threads call swap! on the same
                     ; atom ? can we lose one of those updates ?
@@ -2869,9 +2994,9 @@
                     ; 4. if yes, then update atom to new state
                     ; 5. else go through the process again
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; make the below test cases pass
                     (def counter (atom 0))
@@ -2887,9 +3012,9 @@
                     (= __ (do (swap! counter + 1 2 3 4 5)
                     @counter))
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; refs are another reference type that allow you
                     ; to update the state of multiple entities using
@@ -2903,9 +3028,9 @@
                     ; now we want to transfer some money from account-b to a
                     ; but we want this done as a transaction just like in databases
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; we use alter to  modify refs within a transaction started
                     ; by dosync
@@ -2923,9 +3048,9 @@
                     @account-b
                     ;=> {:name "b", :balance 199000} 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; transactions on refs support the ACI properties, 
                     ; subset of ACID in databases
@@ -2937,9 +3062,9 @@
                     ; if two threads run simultaneous transactions, 
                     ; one of them will retry 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; finally ref-set can be used to update the value of
                     ; any ref
@@ -2947,9 +3072,9 @@
                     (dosync
                     (ref-set account-a {:name "a" :balance 0}))
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; make the below test cases pass
 
@@ -2967,9 +3092,9 @@
                     (= 0 (do __
                     @the-world))
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; agents are a reference type that have a queue holding
                     ; the actions that need to be performed on the agent's value
@@ -2987,9 +3112,9 @@
                     ; send returns immediately with the value of the agent 
                     ; the update on the agent happens in a thread on thread pool
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; what about send-off ?
                     ; send works with the fixed thread pool and 
@@ -3002,9 +3127,9 @@
                     ; use it for long running/blocking tasks so as not to block all
                     ; threads of the fixed thread pool
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; there are other ways of getting concurrency or writing
                     ; high volume data processing systems in clojure
@@ -3013,31 +3138,21 @@
                     ; tranducers
                     ; core.async
                     ```
-                </section>
+                </section-->
 
                 <section data-markdown>
                     ```clj
-                    ; let's get back to more interesting stuff
-                    ; write a function that returns the divisors
-                    ; of a given number
-
-                    (= (__ 6) '(1 2 3))
-
-                    (= (__ 7) '(1))
-
-                    (= (__ 496) '(1 2 4 8 16 31 62 124 248))
-
-                    (= (__ 500) '(1 2 4 5 10 20 25 50 100 125 250))
-
+                    ; open the file divisors_test.clj
+                    ; and make the test cases pass
                     ```
                 </section>
 
                 <section data-markdown>
                     ```clj
                     ; this is my solution
-
-                    (fn [n] (filter #(zero? (rem n %)) 
-                    (range 1 n))) 
+                    (fn [n]
+                      (filter #(zero? (rem n %)) 
+                        (range 1 n))) 
                     ```
                 </section>
 
@@ -3060,14 +3175,14 @@
                     ```
                 </section>
 
-                <section>
+                <!-- section>
                     <h3>Organizing your project</h3>
                     <p>Leiningen is the most prevalent build tool for clojure</p>
                     <p>Boot is another one gaining in popularity</p>
                     <p>We will focus on leiningen for now</p>
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; to create a new project we can run the following
 
@@ -3089,9 +3204,9 @@
                         <span class="tok-err">|</span> <span class="tok-err">|</span> <span class="tok-err">|</span> <span class="tok-nv">core_test.clj</span>
                     </code></pre>
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; let's take a look at some of the important pieces there
 
@@ -3103,9 +3218,9 @@
                     ; core.clj is a dummy starting point for your project
 
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; some useful commands are
 
@@ -3119,9 +3234,9 @@
 
                     lein uberjar
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; write a function that returns intersection of two sets
                     ; i.e. items common to both sets
@@ -3141,17 +3256,17 @@
 
                     #(set (filter  %1 %2))
                     ```
-                </section>
+                </section-->
 
-                <section>
+                <!-- section>
                     <h3>Java interop</h3>
                     <ul>
                         <li>Clojure has seamless access to java libraries since it runs on the JVM</li>
                         <li>This allows clojure to use the extensive Java eco-system of libraries</li>
                     </ul>
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; we can call methods on an object using the (.methodName object)
                     ; notation
@@ -3173,9 +3288,9 @@
                     (indexOf "W"))
                     ;=> 6
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; we can call static methods of classes or access static fields 
                     ; as follows
@@ -3186,9 +3301,9 @@
                     java.lang.Math/PI
                     ;=> 3.141592653589793
                     ```
-                </section>
+                </section-->
 
-                <section data-markdown>
+                <!-- section data-markdown>
                     ```clj
                     ; we can create new objects in two ways
 
@@ -3201,7 +3316,7 @@
                     (String. "hello world")
                     ;=> "hello world"
                     ```
-                </section>
+                </section-->
 
                 
 
