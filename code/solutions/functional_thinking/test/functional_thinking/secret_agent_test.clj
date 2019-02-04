@@ -17,33 +17,38 @@
 (defn read-directions-from-file
   [filename]
   (slurp filename))
-  
+
+(defn convert-directions
+  [in-directions]
+  (map (fn [turn-move]
+         (let [[turn move] (clojure.string/split turn-move #" ")]
+           [(keyword turn) (read-string move)]))
+       in-directions))
+
+(defn new-direction
+  [current-direction turn-to]
+  (let [new-headings-map {[:N :R] [:E [1 0]]
+                          [:N :L] [:W [-1 0]]
+                          [:W :R] [:N [0 1]]
+                          [:W :L] [:S [0 -1]]
+                          [:S :R] [:W [-1 0]]
+                          [:S :L] [:E [1 0]]
+                          [:E :R] [:S [0 -1]]
+                          [:E :L] [:N [0 1]]}]
+    (new-headings-map [current-direction turn-to])))
+
+(defn new-direction-and-co-ordinates
+  [[direction [curr-x curr-y]] [turn move-by]]
+  (let [[new-direction [x-delta y-delta]] (new-direction direction turn)
+        new-co-ordinates [(+ curr-x (* x-delta move-by))
+                          (+ curr-y (* y-delta move-by))]]
+    [new-direction new-co-ordinates]))
 
 (defn decode-directions
   [in-directions]
-  (let [directions (map (fn [turn-move]
-                           [(keyword (subs turn-move 0 1)) 
-                            (read-string (subs turn-move 1))])
-                     in-directions)
+  (let [directions (convert-directions in-directions)
         start-co-ordinates [0 0]
-        start-direction :N
-        new-direction (fn [current-direction turn-direction]
-                        (let [new-headings-map {[:N :R] [:E [1 0]]
-                                                [:N :L] [:W [-1 0]]
-                                                [:W :R] [:N [0 1]]
-                                                [:W :L] [:S [0 -1]]
-                                                [:S :R] [:W [-1 0]]
-                                                [:S :L] [:E [1 0]]
-                                                [:E :R] [:S [0 -1]]
-                                                [:E :L] [:N [0 1]]}]
-                          (new-headings-map [current-direction turn-direction])))
-        new-direction-and-co-ordinates (fn [[direction co-ordinates] [turn move-by]]
-                                         (let [[new-direction delta] (new-direction direction turn)
-                                               new-co-ordinates (map + co-ordinates
-                                                                  (map *
-                                                                    [move-by move-by]
-                                                                    delta))]
-                                              [new-direction new-co-ordinates]))]
+        start-direction :N]
     (apply + (map #(Math/abs %) 
                (second
                  (reduce new-direction-and-co-ordinates
@@ -55,9 +60,9 @@
   (is (= 2 (decode-directions (string-to-list "R2, R2, R2"))))
   (is (= 12 (decode-directions (string-to-list "R5, L5, R5, R3"))))
   (is (= 231 (decode-directions (string-to-list 
-                                 (read-directions-from-file "test/functional_thinking/secret_agent_directions.txt"))))))
+                                 (read-directions-from-file
+                                  "test/functional_thinking/secret_agent_directions.txt"))))))
 
-    
 
 
 

@@ -69,6 +69,41 @@
 				            <p>Big emphasis on concurrency</p>
 				        </section>
 
+                <section>
+                    <h3>Who uses Clojure ?</h3>
+                    <ul>
+                        <li>Boeing - Boeing 737 MAX - onboard maintainance</li>
+                        <li>Puppet Labs - DevOps apps & services eg. trapperkeeper</li>
+                        <li>Cisco -	Malware analysis & threat intelligence platform (expert system with core.logic)</li>
+                        <li>Deuche Bank (UK) -	Processing event streams from Apache Storm</li>
+                        <li>Atlassian -	Collaborative editing platform for all their products</li>
+                        <li>Netflix -	Map-Reduce languages for writing apps for Hadoop/Pig</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Who uses Clojure ?</h3>
+                    <ul>
+                        <li>USwitch (UK) - Creating meaningful data from multiple sources</li>
+                        <li>Daily Mail Online (UK) - Publishing pipeline</li>
+                        <li>Circle CI (USA) - Frontend of CI server in Clojurescript & test suite</li>
+                        <li>CitiGroup - Financial Trading</li>
+                        <li>Student Loans company (UK) - Loans management system written in Clojure</li>
+                        <li>LinkedIn - Powers the LinkedIn social graph</li>
+                        <li>Walmart (USA) - eReceipts project to process every purchase from 5,000+ stores</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Who uses Clojure ?</h3>
+                    <ul>
+                        <li>SwiftKey (UK) - Predictive intelligence platform (possibly used with Microsoft Cortana)</li>
+                        <li>Roomkey.co.uk - Hotel booking system to rival Expedia (with a tiny development team)</li>
+                        <li>Braintree - Payment processing pipeline with Kafka</li>
+                        <li>Thoughtworks - Agile development for Client projects world wide</li>
+                        <li>Salesforce (USA) - Build & deployment with Puppet & Application Routing with nginx-clojure</li>
+                    </ul>
+                </section>
 
 				        <section>
                     <h2>The REPL</h2>
@@ -1096,15 +1131,17 @@
                 <section data-markdown>
                     ```clj
                     ; reduce reduces a collection to a single value.
-                    ; it has 2 variants -
-                    ; first variant takes a 2 argument function and
-                    ; applies the function to the first 2 items of the collection.
-                    ; in the next iteration the function will be called on the
-                    ; previous return value and the next item from
-                    ; the sequence, and so on..
-                    (reduce + [1 2 3 4])
+                    (reduce +
+                            [1 2 3 4])
                     ;=> 10
 
+                    ; reduce takes a 2 argument function and
+                    ; applies the function to the first 2 items of the
+                    ; collection.
+                    ; in the next iteration the function will be called
+                    ; on the previous return value and the next item from
+                    ; the sequence, and so on..
+                    
                     ; this is what is happening 
                     ; (+ (+ (+ 1 2) 3) 4)
                     ```
@@ -1112,13 +1149,45 @@
 
                 <section data-markdown>
                     ```clj
-                    ; the second variant takes an additional starting value.
-                    ; it applies the function to the starting value and the first 
-                    ; element of the sequence.
+                    ; reduce can also take an additional starting value.
+                    ; it applies the function to the starting value and
+                    ; the first element of the sequence.
                     ; from there on it works as above 
-                    (reduce + 1 [2 3])
+                    (reduce +
+                            1
+                            [2 3])
                     ;=> 6
 
+                    (reduce conj
+                            #{}
+                            [1 2 3 4 5])
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; let's find the greatest number in a list
+                    (reduce (fn [a b]
+                              (if (> a b)
+                                a
+                                b))
+                            0
+                            [1 2 3 4 5])
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; how about taking the average of a list ?
+                    (reduce (fn [[n d] b]
+                              [(+ n b) (inc d)])
+                            [0 0]
+                            [1 2 3 4 5])
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     ; let's say i want to convert a vector into a map
                     ; with vector elements as keys and their string
                     ; representation as values.
