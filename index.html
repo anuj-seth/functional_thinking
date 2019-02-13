@@ -3327,42 +3327,46 @@
                     ```
                 </section-->
 
-                <!-- section>
+                <section>
                     <h3>Java interop</h3>
                     <ul>
                         <li>Clojure has seamless access to java libraries since it runs on the JVM</li>
                         <li>This allows clojure to use the extensive Java eco-system of libraries</li>
                     </ul>
-                </section-->
+                </section>
 
-                <!-- section data-markdown>
+                <section data-markdown>
                     ```clj
-                    ; we can call methods on an object using the (.methodName object)
-                    ; notation
+                    ; we can call methods on an object using the
+                    ; (.methodName object) notation
 
-                    ; since clojure strings are implemented as java strings
-                    ; it allows us to do this
+                    ; since clojure strings are implemented as
+                    ; java strings it allows us to do this
 
                     (.toUpperCase "hello world")
                     ;=> "HELLO WORLD"
 
                     (.indexOf (.toUpperCase "hello world") "W")
                     ;=> 6
+                    ```
+                </section>
 
+                <section data-markdown>
+                    ```clj
                     ; and we can use the threading macro for jave interop
                     ; to apply multiple methods
 
                     (.. "hello world"
-                    toUpperCase 
-                    (indexOf "W"))
+                      toUpperCase 
+                      (indexOf "W"))
                     ;=> 6
                     ```
-                </section-->
+                </section>
 
-                <!-- section data-markdown>
+                <section data-markdown>
                     ```clj
-                    ; we can call static methods of classes or access static fields 
-                    ; as follows
+                    ; we can call static methods of classes or
+                    ; access static fields as follows
 
                     (java.lang.Math/abs -3)
                     ;=> 3
@@ -3370,9 +3374,9 @@
                     java.lang.Math/PI
                     ;=> 3.141592653589793
                     ```
-                </section-->
+                </section>
 
-                <!-- section data-markdown>
+                <section data-markdown>
                     ```clj
                     ; we can create new objects in two ways
 
@@ -3385,7 +3389,17 @@
                     (String. "hello world")
                     ;=> "hello world"
                     ```
-                </section-->
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; we can create new objects in two ways
+                    (let [s (String. "hello world")]
+                      (.. s
+                        toUpperCase
+                        (indexOf "W")))
+                    ```
+                </section>
 
                 
 
