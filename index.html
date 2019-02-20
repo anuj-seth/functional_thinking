@@ -49,6 +49,14 @@
 					          </p>
 				        </section>
 
+                <section>
+                    <h2>What is Clojure ?</h2>
+                    <p>A dialect of Lisp that runs on the JVM, CLR and also targets JavaScript</p>
+                    <p>Created by Rich Hickey<p>
+				                <p>Functional programming language (?)</p>
+				                <p>Big emphasis on concurrency</p>
+				        </section>
+
                 <section data-markdown>
                     <script type="text/template">
                      <h2>What is functional programming ?</h2>
@@ -60,14 +68,6 @@
 	                   <p span class="fragment">Laziness</p>
                     </script>
 	              </section>
-
-                <section>
-                    <h2>What is Clojure ?</h2>
-                    <p>A dialect of Lisp that runs on the JVM, CLR and also targets JavaScript</p>
-                    <p>Created by Rich Hickey<p>
-				            <p>Functional programming language (?)</p>
-				            <p>Big emphasis on concurrency</p>
-				        </section>
 
                 <section>
                     <h3>Who uses Clojure ?</h3>
@@ -212,6 +212,17 @@
 
                 <section data-markdown>
                     ```clj
+                    ; you can of course call other functions in the
+                    ; boolean-form as well the then and else forms
+                    (if (zero? 1)
+                      (inc 1)
+                      (dec 1))
+                    ;=> 0
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     ; all lisp/clojure forms return a value when evaluated.
                     ; in some cases that value may be nil.
                     ; and that's why Alan Perlis said .....
@@ -299,6 +310,16 @@
                     ; the last expression
                     (and 1 2 3 [])
                     ;=> []
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; you can use these boolean operators in if and when
+                    (if (and (> 2 1)
+                             (= 0 (dec 1)))
+                      "true"
+                      "false")
                     ```
                 </section>
 
@@ -532,7 +553,7 @@
                     ; maps store key value pairs,
                     ; similar to dictionaries or hashes
                     {:first-name "Rich"
-                    :last-name "Hickey"}
+                     :last-name "Hickey"}
 
                     ; extracting values
                     (:first-name {:first-name "Rich" :last-name "Hickey"})
@@ -541,6 +562,23 @@
                     ;=> "Rich"
 
                     ; keywords and maps act as functions here
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Collections
+                    Maps
+                    -------
+                    ```clj
+                    ; you can add key value pairs to a map using assoc
+                    (assoc {} :name "Superman")
+                    ;=> {:name "Superman"}
+
+                    (def m {})
+                    (assoc m :name "Superman"
+                             :occupation "Saving the world")
+
+                    ; what would be value of m after this operation ?
                     ```
                 </section>
 
@@ -663,6 +701,67 @@
                     ```
                 </section>
 
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    ; can you write an anonymous function that takes one argument
+                    ; and then calls inc on it twice ?
+
+                    ; write it using the fn notation as well as the #() form
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    ((fn [x]
+                       (inc (inc
+                             x)))
+                     3)
+
+                    ;=> 5
+
+                    (#(inc (inc %)) 3)
+
+                    ;=> 5
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    ; can you write an anonymous function that takes 2 arguments
+                    ; and subtracts the bigger one from the smaller one ?
+
+                    ; write it using the fn notation as well as the #() form
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    ((fn [a b]
+                       (if (> a b)
+                         (- a b)
+                         (- b a)))
+                     2 10)
+
+                    ;=> 8
+
+                    (#(if (> %1 %2)
+                        (- %1 %2)
+                        (- %2 %1))
+                     2 10)
+
+                    ;=> 8
+
+                    ```
+                </section>
+
                 <section>
                     <pre><code data-sample="code/files/functions_test.clj#4-12">
                     </code></pre>
@@ -719,6 +818,37 @@
                     Functions
                     ---------
                     ```clj
+                    ; can you write a named function that takes 2 arguments
+                    ; and returns zero if they are equal else it returns the
+                    ; bigger one ?
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    (defn bigger-or-zero
+                      [a b]
+                      (if (= a b)
+                        0
+                        (if (> a b)
+                          a
+                          b)))
+
+                    (bigger-or-zero 5 5)
+                    ;=> 0
+                    (bigger-or-zero 7 5)
+                    ;=> 7
+
+                    ; DON'T DO THIS AT HOME
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
                     ; clojure also supports functions with multiple arities,
                     ; i.e. different argument counts for the same function
                     (defn make-set
@@ -727,6 +857,25 @@
 
                     ; what happens when you call this function with 1 argument ? 
                     ; 2 arguments ?
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    ---------
+                    ```clj
+                    ; a more idiomatic usage of this is below
+                    (defn make-set
+                      ([a] (make-set a :no-value-given))
+                      ([a b] (if (= b :no-value-given)
+                               "error message"
+                               #{a b})))
+
+                    (make-set 1)
+                    ;=> "error message"
+
+                    (make-set 1 2)
+                    ;=> #{1 2}
                     ```
                 </section>
 
@@ -789,6 +938,20 @@
                       (println "radius is" r)
                       (* pi r-squared))
 
+                    ```
+                </section>
+
+                <section data-markdown>
+                    Functions
+                    Locals
+                    ---------
+                    ```clj
+                    ; you can use any expression to get the value for a binding
+                    (let [r 500
+                          randomizer (if (>= (rand-int 1000) r)
+                                       (* r r)
+                                       (* r r r))]
+                    randomizer)
                     ```
                 </section>
 
@@ -872,7 +1035,7 @@
                       (println a b c) 
                       (println d) 
                       (println e))
-                    ;=> 2 3
+                    ;=> 1 2 3
                     ;=> (4 5)
                     ;=> [1 2 3 4 5]
                     ```
@@ -1110,6 +1273,23 @@
                     ; make this test pass
                     (= __ (map #(+ % 5) '(1 2 3)))
 
+                    ; given this input ["hello" "cruel" "world"]
+                    ; can you create a sequence of string lengths ?
+                    ; hint: count function in standard library
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; given an input vector like this
+                    ; [[1 2 3 4 5]
+                    ;  ["hello" "cruel" "world"]
+                    ;  [:a :b :c]]
+                    ; can you extract the third element i.e. index 2
+                    ; from each ?
+                    ; (3 "world" :c)
+                    ; hint: nth
+
                     ; write a function, mapset, that works like map
                     ; but returns a set
                     (mapset inc [1 1 2 3 4 4 5])
@@ -1118,6 +1298,7 @@
                     ; hint: (doc set)
                     ```
                 </section>
+
                 <section data-markdown>
                     ```clj
                     ; this is what i came up with
@@ -1171,7 +1352,6 @@
                               (if (> a b)
                                 a
                                 b))
-                            0
                             [1 2 3 4 5])
                     ```
                 </section>
@@ -1200,9 +1380,18 @@
 
                 <section data-markdown>
                     ```clj
-                    (reduce (fn [acc x] (assoc acc x (str x)))
+                    (reduce (fn [acc x]
+                              (assoc acc x (str x)))
                       {}
                       [1 2 3 4 :a])
+                    ```
+                </section>
+
+                <!--section data-markdown>
+                    ```clj
+                    (reduce (fn [acc x] (assoc acc x (str x)))
+                    {}
+                    [1 2 3 4 :a])
 
                     (apply hash-map
                       (flatten (map (fn [x] [x (str x)])
@@ -1212,7 +1401,7 @@
                       (map (fn [x] [x (str x)])
                            [1 2 3 4 :a]))
                     ```
-                </section>
+                </section-->
 
 	              <section>
 	                  <h3>Sequence abstraction and core functions</h3>
@@ -1329,12 +1518,21 @@
                     ; as there are collections
                     (map str
                       ["Mr. " "Mrs. " "Miss. "]
-                      ["Abhishek" "Aishwarya" "Aaradhya"])
-                    ;=> ("Mr. Abhishek" "Mrs. Aishwarya" "Miss. Aaradhya")
+                      ["X" "Y" "Z"])
+                    ;=> ("Mr. X" "Mrs. Y" "Miss. Z")
 
+                    ; given these 2 sequences
+                    ; [100 200 300 400]
+                    ; [1 2 3 4 5 6 7 8 9 10]
+                    ; can you add the corresponding elements ?
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
                     ; you can even pass a collection of functions to map
                     (map #(vector (% ()) (% []) (% {}))
-                      [seq count])
+                    [seq count])
                     ;=>([nil nil nil] [0 0 0])
                     ```
                 </section>
