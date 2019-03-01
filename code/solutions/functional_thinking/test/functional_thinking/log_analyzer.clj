@@ -54,5 +54,22 @@
      {}
      log-data)))
 
+(defn calculate-statistics-2
+  []
+  (let [log-lines  (map #(split-line % #";")
+                        (read-log-file "sample_1.log"))
+        [header & other-lines] log-lines
+        ks (map keyword header)
+        log-data (map zipmap
+                      (repeat ks)
+                      other-lines)]
+    (into {}
+          (map (fn [[trx-type data]]
+                 (let [cnt (count data)
+                       total-time (apply + (map #(Integer/parseInt (:response_time %))
+                                                data))]
+                   [trx-type {:count cnt :respons_time total-time}]))
+               (group-by :trx_type log-data)))))
 
-(calculate-statistics)
+
+(calculate-statistics-2)
