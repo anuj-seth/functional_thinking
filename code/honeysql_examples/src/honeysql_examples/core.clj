@@ -31,6 +31,8 @@
         :limit 50
         :offset 10})
 
+(sql/format a)
+
 (defn great-infy-data-pipeline
   [result-gatherer map-fn filter-fn data-generator]
   (result-gatherer
@@ -38,8 +40,9 @@
         (filter filter-fn (data-generator)))))
 
 (great-infy-data-pipeline identity
-                          (fn [{:keys [emp-id] :as m}]
-                            (assoc m :emp-id (inc emp-id)))
+                          (fn [m]
+                            (let [emp-id (:emp-id m)]
+                              (assoc m :emp-id (inc emp-id))))
                           
                           #(= :female (:gender %))
 
