@@ -10,18 +10,18 @@
 
 (defn index-of-any
   [s l]
-  (take 1
-        (index-of-all s
-                      l)))
+  (first
+   (index-of-all s
+                 l)))
 
-(= [[0 \z]]
+(= [0 \z]
    (index-of-any "zzabyycdxx"
                  [\z \a]))
 
-(= [[3 \b]]
+(= [3 \b]
    (index-of-any "zzabyycdxx"
                  [\b \y]))
 
-(= ()
+(= nil
    (index-of-any "aba"
                  [\z]))

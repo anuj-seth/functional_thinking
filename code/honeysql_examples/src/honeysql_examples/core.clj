@@ -43,10 +43,10 @@
                           (fn [m]
                             (let [emp-id (:emp-id m)]
                               (assoc m :emp-id (inc emp-id))))
-                          
+
                           #(= :female (:gender %))
 
-                          #(vector 
+                          #(vector
                             {:emp-id 1234, :gender :male}
                             {:emp-id 1456 :gender :female}
                             {:emp-id 45636 :gender :female}))
@@ -55,7 +55,7 @@
 (great-infy-data-pipeline #(take 10 %)
 
                           #(+ 10 %)
-                          
+
                           identity
-                          
+
                           range)

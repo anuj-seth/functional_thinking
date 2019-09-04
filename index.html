@@ -1373,6 +1373,18 @@
                               (if (> a b)
                                 a
                                 b))
+                            [1 10 3 14 5])
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; the starting value can be any data structure
+                    (reduce (fn [acc v]
+                              (conj acc
+                                    v
+                                    (* v v)))
+                            []
                             [1 2 3 4 5])
                     ```
                 </section>
@@ -1380,8 +1392,17 @@
                 <section data-markdown>
                     ```clj
                     ; how about taking the average of a list ?
-                    (reduce (fn [[n d] b]
-                              [(+ n b) (inc d)])
+                    ; using reduce
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ```clj
+                    ; how about taking the average of a list ?
+                    (reduce (fn [acc b]
+                              (let [s (first acc)
+                                    c (second acc)]
+                                [(+ s b) (inc c)]))
                             [0 0]
                             [1 2 3 4 5])
                     ```

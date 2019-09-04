@@ -1,30 +1,5 @@
-(ns functional-thinking-neal-ford.chapter-1)
-
-(defn word-frequencies
-  [words]
-  (let [non-words #{"the" "and" "of" "to" "a" "i"
-                    "it" "in" "or" "is" "as" "so"
-                    "but" "be"}
-        word-seq (re-seq #"\w+" words)
-        only-words (remove non-words
-                           (map clojure.string/lower-case
-                                word-seq))
-        reduce-fn (fn [acc k]
-                    (update acc
-                            k
-                            (fnil inc 0)))]
-    (reduce reduce-fn
-            {}
-            only-words)))
-
-(word-frequencies "the quick brown fox jumps over the lazy dogs")
-
-(word-frequencies "Takes a function f, and returns a function that calls f, replacing
-a nil first argument to f with the supplied value x. Higher arity
-versions can replace arguments in the second and third
-positions (y, z). Note that the function f can take any number of
-arguments, not just the one(s) being nil-patched.")
-
+(ns functional-thinking.index-of-any
+  (:require [clojure.test :refer :all]))
 
 (defn index-of-all
   [s l]
@@ -36,18 +11,20 @@ arguments, not just the one(s) being nil-patched.")
 
 (defn index-of-any
   [s l]
-  (take 1
-        (index-of-all s
-                      l)))
+  (first (index-of-all s
+                       l)))
 
-(= [[0 \z]]
-   (index-of-any "zzabyycdxx"
-                 [\z \a]))
+(index-of-any "zzabyycdxx"
+              [\z \a])
 
-(= [[3 \b]]
-   (index-of-any "zzabyycdxx"
-                 [\b \y]))
+(is (= [0 \z]
+       (index-of-any "zzabyycdxx"
+                     [\z \a])))
 
-(= ()
-   (index-of-any "aba"
-                 [\z]))
+(is (= [3 \b]
+       (index-of-any "zzabyycdxx"
+                     [\b \y])))
+
+(is (= nil
+       (index-of-any "aba"
+                     [\z])))
