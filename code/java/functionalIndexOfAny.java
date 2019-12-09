@@ -7,7 +7,8 @@ public class functionalIndexOfAny {
         for (char c : searchChars) {
             searchCharacters.add(c);
         }
-        Set<Character> searchSet = new HashSet<>(searchCharacters);
+        Set<Character> searchSet =
+            new HashSet<>(searchCharacters);
 
         return IntStream.range(0, str.length())
             .filter(i -> searchSet.contains(str.charAt(i)))

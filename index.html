@@ -333,15 +333,29 @@
 
                 <section data-markdown>
                     ```java
-                    // notice how Clojure syntax is different from
-                    // languages like java where you have a mixture of
-                    // infix operators, dot operators and parentheses
+                    // this is a typical factorial calculator
                     int number = 5;
                     int factorial = number;
                     for(int i = (number - 1); i > 1; i--) {
                         factorial = factorial * i;
                     }
                     System.out.println("Factorial of a number is " + factorial);
+                    ```
+                </section>
+
+                <section>
+                    <pre><code data-sample='code/java/functionalFactorial.java#6-7'>
+                    </code></pre>
+                </section>
+
+                <section data-markdown>
+                    ```java
+                    // notice how Clojure syntax is different from
+                    // languages like java where you have a mixture of
+                    // infix operators, dot operators and parentheses
+                    int number = 5;
+                    IntStream.rangeClosed(2, number)
+                        .reduce(1, (x, y) -> x * y)
                     // why does this matter ?
                     ```
                     ```clj
@@ -356,20 +370,15 @@
                 </section>
 
                 <section>
+                    <pre><code data-sample='code/java/functionalIndexOfAny.java#6-15'>
+                    </code></pre>
+                </section>
+
+                <section>
                     <pre><code data-sample='code/files/index_of_any.clj#3-15'>
                     </code></pre>
                 </section>
 
-
-                <section data-markdown>
-                    ```clj
-                    ; you can use these boolean operators in if and when
-                    (if (and (> 2 1)
-                             (= 0 (dec 1)))
-                      "true"
-                      "false")
-                    ```
-                </section>
 
                 <section>
                     <img src="resources/images/lisp_cycles.png"> 
