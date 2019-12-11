@@ -18,7 +18,9 @@ public class cleanNames {
     }
 
     public static void main(String []args) {
-        List<String> names = Arrays.asList("neel", "s", "nitin", "j", "mukesh", "vijay", "dinanath", "j", "chauhan",
+        List<String> names = Arrays.asList("neel", "s", "nitin", "j",
+                                           "mukesh", "vijay", "dinanath",
+                                           "j", "chauhan", 
                                            "amar", "akbar", "anthony");
         System.out.println(cleanNames(names));
     }
